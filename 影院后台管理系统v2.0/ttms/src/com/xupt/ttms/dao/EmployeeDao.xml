@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "
+http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xupt.ttms.dao.EmployeeDao">
+	<!-- 结果映射 -->
+	<resultMap type="EmployeeInfo" id="rm1">
+		<id property="emp_id" column="emp_id"/>
+		<result property="emp_account" column="emp_account"/>
+		<result property="emp_pass" column="emp_pass"/>
+		<result property="emp_name" column="emp_name"/>
+		<result property="emp_position" column="emp_position"/>
+		<result property="emp_sex" column="emp_sex"/>
+		<result property="emp_dob" column="emp_dob"/>
+		<result property="emp_tel" column="emp_tel"/>
+		<result property="emp_email" column="emp_email"/>
+		<result property="emp_addr" column="emp_addr"/>
+		<result property="emp_flag" column="emp_flag"/>
+		<!-- <result property="emp_img" column="emp_img"/> -->
+	</resultMap>
+
+	<!-- 根据员工的账号，获取员工的详情 -->
+	<select id="getEmpInfoByAccount" parameterType="string" resultMap="rm1">
+		SELECT * FROM employees WHERE emp_account = #{emp_account}
+	</select>
+	
+	<!-- 保存用户注册信息 -->
+	<insert id="saveEmpInfo" parameterType="EmployeeInfo" useGeneratedKeys="true" keyProperty="emp_id">
+		insert into employees (emp_account,emp_name,emp_position,emp_sex,emp_dob,emp_age,emp_tel,emp_email,emp_addr,emp_img,emp_flag) 
+		values( #{emp_account,jdbcType=VARCHAR},
+				#{emp_name,jdbcType=VARCHAR},#{emp_position,jdbcType=VARCHAR},
+				#{emp_sex,jdbcType=VARCHAR},#{emp_dob,jdbcType=VARCHAR},
+				#{emp_age,jdbcType=INTEGER},#{emp_tel,jdbcType=VARCHAR},
+				#{emp_email,jdbcType=VARCHAR},#{emp_addr,jdbcType=VARCHAR},
+				#{emp_img,jdbcType=VARCHAR},#{emp_flag,jdbcType=INTEGER}
+			  )
+	</insert>
+	
+	<!-- 获取所有的员工列表 -->
+	<select id="getCurrentEmps" parameterType="map" resultMap="rm1">
+		SELECT 	* FROM employees WHERE emp_flag != 1  
+		LIMIT #{startRownum},#{pageEmpNum}
+	</select>
+	
+	<!--根据用户的编号，获取用户的详情  -->
+	<select id="getEmpInfoByEmpId" parameterType="integer" resultMap="rm1">
+		select * from employees where emp_id = #{emp_id}
+	</select>
+	
+	<!-- 根据员工编号，更新用户编辑的信息 -->
+	<update id="updateEmpInfoByEmpId" parameterType="EmployeeInfo">
+		update employees set emp_name=#{emp_name,jdbcType=VARCHAR},emp_position=#{emp_position,jdbcType=VARCHAR},
+							 emp_sex=#{emp_sex,jdbcType=VARCHAR},emp_dob=#{emp_dob,jdbcType=DATE},
+							 emp_age=#{emp_age,jdbcType=INTEGER},emp_tel=#{emp_tel,jdbcType=VARCHAR},
+							 emp_email=#{emp_email,jdbcType=VARCHAR},emp_addr=#{emp_addr,jdbcType=VARCHAR},
+							 emp_account=#{emp_account,jdbcType=VARCHAR}
+		where emp_id=#{emp_id}
+	</update>
+	
+	<!-- 根据员工的编号，删除员工信息  -->
+	<delete id="delEmpInfoByEmpId" parameterType="integer">
+		DELETE FROM employees WHERE emp_id = #{emp_id}
+	</delete>
+	
+	<!-- 获取员工的总页数 -->
+	<select id="getPageCount" resultType="_int">
+		SELECT count(*) FROM employees
+	</select>
+	
+	<!-- 获取员工总数 -->
+	<select id="getAllEmployees" parameterType="EmployeeInfo" resultMap="rm1">
+		select * from employees;
+	</select>
+	
+	<!-- 修改密码 -->
+	<update id="updatepass" parameterType="map">
+		update employees set emp_pass = #{new_pass,jdbcType=VARCHAR} where emp_id = #{emp_id}
+	</update>
+</mapper>

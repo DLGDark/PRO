@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "
+http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xupt.ttms.dao.TicketDao">
+	<!-- 结果映射 -->
+	<resultMap type="TicketInfo" id="rm1">
+		<id property="ticket_id" column="ticket_id"/>
+		<result property="sche_id" column="sche_id"/>
+		<result property="order_id" column="order_id"/>
+		<result property="seat_row" column="seat_row"/>
+		<result property="seat_col" column="seat_col"/>
+		<result property="ticket_date" column="ticket_date"/>
+		<result property="ticket_price" column="ticket_price"/>	
+	</resultMap>
+	
+	<!-- 保存票记录 -->
+	<insert id="saveTicket" parameterType="TicketInfo" useGeneratedKeys="true" keyProperty="ticket_id">
+		insert into tickets (order_id,sche_id,seat_row,seat_col,ticket_date,ticket_price) 
+		values( #{order_id,jdbcType=INTEGER},
+				#{sche_id,jdbcType=INTEGER},
+				#{seat_row,jdbcType=INTEGER},
+				#{seat_col,jdbcType=INTEGER},
+				#{ticket_date,jdbcType=VARCHAR},
+				#{ticket_price,jdbcType=NUMERIC}
+			 )
+	</insert>
+	
+	<!-- 根据订单编号，删除该订单中的所有票 -->
+	<delete id="delTicketInfoByOrderId" parameterType="_integer">
+		DELETE FROM tickets WHERE order_id = #{order_id}
+	</delete>
+	
+	<!-- 根据演出厅编号，获取当前演出计划所产生的所有票 -->
+	<select id="getAllTicketsByScheId" parameterType="_integer" resultMap="rm1">
+		SELECT * FROM tickets WHERE sche_id = #{sche_id}
+	</select>
+</mapper>

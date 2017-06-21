@@ -1,0 +1,130 @@
+a{
+	display: inline-block;
+}
+a:link{
+	text-decoration: none;
+} 
+.wrapa{
+	display: inline-block;
+}
+i.icon {
+    margin-right: 6px;
+    z-index: 999;
+}
+.btn{
+    letter-spacing: 4px;
+    font-size: 18px;
+    font-weight: 560;   
+}
+.btn:focus{
+	outline: none;
+	border: 0;
+	background-color: #337ab7;
+}
+.head-btn{
+	height: 60px;
+	margin-bottom: 30px;
+	padding: 10px 20px;
+	border-bottom: 2px solid #337ab7;
+}
+.btright{
+	margin-right: 26px;
+}
+.rowset{
+	margin-right: 0;
+	margin-left: 0;
+}
+.rela{
+	position: relative;
+}
+.name{
+	margin-top: 10px;
+	color: #0548df;
+	font-size: 18px;
+	text-decoration: none;
+}
+.checkbox-img{
+	position: absolute;
+	right: 0;
+	top: 0;
+	width: 30px;
+	height: 30px;
+}
+.nochoice{
+	background:#fff url("../img/sprite.png") 0 0 no-repeat;
+	cursor: pointer;
+}
+.choice{
+	background:#fff url("../img/sprite.png") 0 -38px no-repeat;
+	cursor: pointer;
+}
+/* addForm */
+.form-wrap{
+	background-color: #fff;
+	padding: 10px 20px;
+}
+.form-c{
+	color: #0c0d0c !important;
+	border: 1px solid #56f222 !important;
+	border-radius: 5px !important;
+}
+.add-sub{
+	background-color: rgb(0, 200, 135) !important;
+    border-color: rgb(0, 200, 135) !important;
+    color: #fff;
+    margin-right: 20px;
+}
+.bg-color{
+	background-color: #7a7a7a;
+}
+.imgdiv{
+	width: 270px;
+	height: 360px;
+	padding: 10px 2px;
+	overflow: hidden;
+}
+.commitbtn{
+	padding-top: 30px;
+}
+/* movdetails */
+.updamov{
+	padding: 32px 20px;
+	background-color: #fff;
+	border: 1px solid #eee;
+}
+.ltxt{
+	padding: 10px 20px;
+}
+.inpbg{
+	background-color: transparent;
+	border: 0;
+	outline: none;
+	box-shadow: none;
+}
+.inpbg[disabled]{
+	cursor: default;
+	background-color: transparent;
+}
+.inpbg:focus{
+	outline: none;
+	border: 0;
+	box-shadow: none;
+}
+.endisab{
+	border-bottom: 1px solid #24f0d5;
+}
+.endisab:focus{
+	border-bottom: 1px solid #24f0d5;
+}
+.lmarg{
+	padding-left: 30px;
+}
+.rimg{
+	padding: 10px 20px;
+}
+.foot-btn{
+	margin-top: 20px;
+}
+.modifybtn{
+	margin: 10px 30px;
+}

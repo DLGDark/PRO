@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "
+http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xupt.ttms.dao.NoticeDao">
+	<!-- 结果映射 -->
+	<resultMap type="NoticeInfo" id="rm1">
+		<id property="notice_id" column="notice_id"/>
+		<result property="notice_name" column="notice_name"/>
+		<result property="notice_time" column="notice_time"/>
+		<result property="notice_title" column="notice_title"/>
+		<result property="notice_content" column="notice_content"/>
+	</resultMap>
+	
+	<!-- 发布公告 -->
+	<insert id="publishNotice" parameterType="NoticeInfo" useGeneratedKeys="true" keyProperty="notice_id">
+		insert into notices  (notice_name,notice_time,notice_title,notice_content) 
+		values( #{notice_name,jdbcType=VARCHAR},
+				now(),
+				#{notice_title,jdbcType=VARCHAR},
+				#{notice_content,jdbcType=VARCHAR}
+			  )
+	</insert>
+	
+	<!-- 获取公告列表 -->
+	<select id="getNoticeList" resultMap="rm1">
+		SELECT * FROM notices
+	</select>
+	
+	<!-- 根据公告id，获取公告详情 -->
+	<select id="getNoticeByNoticeId" parameterType="integer" resultMap="rm1">
+		SELECT * FROM notices WHERE notice_id = #{notice_id}
+	</select>
+	
+	<!-- 更新公告 -->
+	<update id="updateNotice" parameterType="NoticeInfo">
+		update notices set notice_name=#{notice_name,jdbcType=VARCHAR},
+							 notice_title=#{notice_title,jdbcType=VARCHAR},
+							 notice_content=#{notice_content,jdbcType=VARCHAR}
+		where notice_id=#{notice_id}
+	</update>
+	<!-- 批量删除 -->
+	<delete id="batchDeleteNotices" parameterType="_integer[]">
+		delete from notices where notice_id in
+		<foreach collection="array" open="(" close=")" separator="," item="notice_id">#{notice_id}</foreach>
+	</delete>
+</mapper>

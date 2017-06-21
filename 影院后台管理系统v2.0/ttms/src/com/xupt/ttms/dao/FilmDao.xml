@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "
+http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xupt.ttms.dao.FilmDao">
+	<!-- 结果映射 -->
+	<resultMap type="FilmInfo" id="rm1">
+		<id property="film_id" column="film_id"/>
+		<result property="film_name" column="film_name"/>
+		<result property="film_length" column="film_length"/>
+		<result property="film_type" column="film_type"/>
+		<result property="film_stars" column="film_stars"/>
+		<result property="film_desc" column="film_desc"/>
+		<result property="film_price" column="film_price"/>
+		<result property="film_datetime" column="film_datetime"/>
+		<result property="film_area" column="film_area"/>
+		<result property="film_img" column="film_img"/>
+		<result property="film_score" column="film_score"/>
+	</resultMap>
+
+	<!-- 添加影片 -->
+	<insert id="addFilm" parameterType="FilmInfo" useGeneratedKeys="true" keyProperty="film_id">
+		insert into films  (film_name,film_length,film_type,film_stars,film_desc,film_price,film_datetime,
+							film_area,film_img,film_score) 
+		values( #{film_name,jdbcType=VARCHAR},#{film_length,jdbcType=INTEGER},
+				#{film_type,jdbcType=VARCHAR},#{film_stars,jdbcType=VARCHAR},
+				#{film_desc,jdbcType=VARCHAR},#{film_price,jdbcType=NUMERIC},
+				#{film_datetime,jdbcType=VARCHAR},#{film_area,jdbcType=VARCHAR},
+				#{film_img,jdbcType=VARCHAR},#{film_score,jdbcType=NUMERIC}
+			  )
+	</insert>
+	
+	<!-- 获取影片列表 -->
+	<select id="getFilmList" resultMap="rm1">
+		SELECT * FROM films
+	</select>
+	
+	<!-- 根据检索条件获取总页数 -->
+	<select id="getSearchPageCount" parameterType="map" resultType="_int">
+		select count(*) from films
+		<where>
+			<!-- 自动的在map中调用get方法来获取参数的值 -->
+			<!-- 若if条件不成立，mybatis框架会自动的将 and 和 or 省略，若全部的id条件都没有成立，则不会自动的添加条件 -->
+			<if test="film_name != null">film_name like CONCAT('%',#{film_name},'%')</if>
+			<if test="film_length != null and film_length > 0">and film_length > #{film_length}</if>
+			<if test="film_type != null">and film_type like CONCAT('%',#{film_type},'%')</if>
+			<if test="film_area != null">and film_area = #{film_area}</if>
+		</where>
+	</select>
+	
+	<!-- 根据检索条件，获取当前分页中的数据 -->
+	<select id="searchFilm" parameterType="map" resultMap="rm1">
+		SELECT * FROM films 
+		<where>
+			<!-- 自动的在map中调用get方法来获取参数的值 -->
+			<!-- 若if条件不成立，mybatis框架会自动的将 and 和 or 省略，若全部的id条件都没有成立，则不会自动的添加条件 -->
+			<if test="film_name != null">film_name like CONCAT('%',#{film_name},'%')</if>
+			<if test="film_length != null and film_length > 0">and film_length > #{film_length}</if>
+			<if test="film_type != null">and film_type like CONCAT('%',#{film_type},'%')</if>
+			<if test="film_area != null">and film_area = #{film_area}</if>
+		</where>
+		limit #{startRownum},#{pageFilmNum}
+	</select>
+	
+	<!-- 批量删除影片 -->
+	<delete id="batchDeleteFilms" parameterType="_int[]">
+		delete from films where film_id in
+		<!-- item表示这个数组中的每个元素，输出具体每个元素中包含的值(放在这个集合里面)   separator=","分隔符 -->
+		<foreach collection="array" open="(" close=")" separator="," item="film_id">#{film_id}</foreach> 
+	</delete>
+	
+	<!-- 根据影片id，获取影片的详情  -->
+	<select id="getFilmInfoByFilmId" parameterType="integer" resultMap="rm1">
+		SELECT * FROM films WHERE film_id = #{film_id}
+	</select>
+	
+	<!-- 更新影片信息 -->
+	<update id="updateFilm" parameterType="FilmInfo">
+		update films set film_name=#{film_name,jdbcType=VARCHAR},film_length=#{film_length,jdbcType=INTEGER},
+							 film_type=#{film_type,jdbcType=VARCHAR},film_stars=#{film_stars,jdbcType=VARCHAR},
+							 film_desc=#{film_desc,jdbcType=VARCHAR},film_price=#{film_price,jdbcType=NUMERIC},
+							 film_datetime=#{film_datetime,jdbcType=VARCHAR},film_area=#{film_area,jdbcType=VARCHAR},
+							 film_img=#{film_img,jdbcType=VARCHAR},film_score=#{film_score,jdbcType=NUMERIC} 
+		where film_id=#{film_id}
+	</update>
+	
+	<!-- 获取总页数 -->
+	<select id="getPageCount" resultType="_int">
+		select count(*) from films
+	</select>
+	
+	<!-- 获取当前页的影片数 -->
+	<select id="getCurrentPageFilms" parameterType="map" resultMap="rm1">
+		SELECT * FROM films limit #{startRownum},#{pageFilmNum}
+	</select>
+	
+	<!-- 根据影片编号，删除影片信息 -->
+	<delete id="deleteFilmByFilmId" parameterType="_int">
+		DELETE FROM films WHERE film_id = #{film_id}
+	</delete>
+</mapper>

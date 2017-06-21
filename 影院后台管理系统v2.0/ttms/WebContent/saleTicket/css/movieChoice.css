@@ -1,0 +1,196 @@
+a:link{
+    text-decoration: none;
+}
+.bgImage{
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    overflow: hidden;
+    z-index: -999999;
+    height: 100%;
+    width: 100%;
+    display: block;
+    background-image: url("../images/shu.jpg");
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+.nav{
+    padding: 8px 15px;
+    margin-bottom: 20px;
+    list-style: none;
+    background-color: #f5f5f5;
+    border-radius: 4px;
+    background-image: url("../images/black-head.png");
+    border-top: 1px solid #fafafa;
+}
+.nav span{
+    color: #ccc;
+}
+.nav li{
+    display: inline-block;
+}
+.nav li.active{
+    color: #777;
+}
+.nav li a{
+    color: #337ab7;
+}
+.block{
+    width: 960px;
+    height: 1080px;
+    background-color: #F1F7F7;
+    margin: 30px auto;
+    box-shadow: 0 0 1px 1px #999;
+    overflow: hidden;
+}
+.head{
+    height: 80px;
+    background-color:  #8ac6d7;
+}
+.title{
+    height: 80px;
+    line-height: 80px;
+}
+.title-font{   
+    font-size: 30px;
+    font-weight: 500;
+    padding-left: 60px;
+    color: #ff8c00;
+}
+.titaddr{
+    font-size: 16px;
+    padding-left: 120px;
+    color: #555;
+}
+.titaddr p{
+    display: inline-block;
+    padding-left: 20px;
+}
+.wrapper{
+    padding:  30px;
+}
+.content{
+    padding-left: 12px;
+}
+.imgwrp{
+    float: left;
+    margin-right: 10px;
+    display: block;
+    padding: 4px;
+    margin-bottom: 20px;
+    line-height: 1.42857143;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    transition: border .2s ease-in-out;
+    -webkit-transition: border .2s ease-in-out;
+    -o-transition: border .2s ease-in-out;
+    transition: border .2s ease-in-out;
+}
+.imgwrp a{
+    display: inline-block;
+}
+.imgwrp img{
+    width:200px;
+    height: 266px;
+}
+.caption{
+    padding: 9px;
+    color: #333;
+}
+.name{
+    margin-top: 10px;
+    color: #0548df;
+    font-size: 18px;
+    text-decoration: none;
+}
+/* saleplan */
+.table{
+    width: 100%;
+    border-collapse:collapse !important;
+}
+.table tr{
+    background-color: #fff;
+    border-bottom: #DFE2DD 1px solid
+}
+.table th{
+    font-size: 18px;
+    color: #000;
+    padding: 10px;
+}
+.table td{
+    text-align: center;
+    padding: 10px;
+}
+.org{
+    color: #ec5c27;
+    font-weight: bold;
+}
+.payticket{
+    text-decoration: none;
+    display: inline-block;
+    width: 80px;
+    height: 35px;
+    line-height: 35px;
+    text-align: center;
+    background-color: #5DB6E0;
+    color: #fff;
+    font-size: 18px;
+}
+/* seatChoice */
+.allseat{
+    width: 768px;
+    margin: 0 auto;
+    padding: 30px 0 20px 200px;
+}
+.ol li{ 
+    float: left;
+    margin-left: 16px;
+    font-size: 26px;
+    cursor: pointer;
+}
+.radiodiv{
+    padding: 10px 30px;
+}
+.labwrap{
+    display: inline-block;
+    margin-left: 20px;
+}
+.seatchoice{
+    display: none;
+}
+.seatchoice + label{
+    background-color: white;
+    border-radius: 10px;
+    border:1px solid #54f059;
+    width:20px;
+    height:20px;
+    display: inline-block;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 20px;
+    cursor: pointer;
+}
+.seatchoice:checked + label{
+    background-color: #eee;
+}
+.seatchoice:checked + label:before{
+    content:"\2714";
+}
+.redcolor{
+    color: #ff0000;
+}
+.trans{
+    color: transparent;
+}
+.green{
+	color: #2bff00;
+}
+.pageParent{
+	padding: 0 60px 30px;
+}
+.page{
+	cursor: pointer;
+	margin-left: 20px;
+}

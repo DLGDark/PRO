@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "
+http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xupt.ttms.dao.SeatDao">
+	<!-- 结果映射 -->
+	<resultMap type="SeatInfo" id="rm1">
+		<id property="seat_id" column="seat_id"/>
+		<result property="seat_status" column="seat_status"/>
+		<result property="seat_row" column="seat_row"/>
+		<result property="seat_col" column="seat_col"/>
+		<result property="studio_id" column="studio_id"/>
+	</resultMap>
+	
+	<!-- 结果映射 -->
+	<resultMap type="StudioInfo" id="rm2">
+		<id property="studio_id" column="studio_id"/>
+		<result property="studio_name" column="studio_name"/>
+		<result property="seat_rows" column="seat_rows"/>
+		<result property="seat_cols" column="seat_cols"/>
+		<result property="studio_type" column="studio_type"/>
+		<result property="studio_desc" column="studio_desc"/>
+	</resultMap>
+
+	<!-- 获取所有的演出厅 -->
+	<select id="getAllStudios" resultMap="rm2">
+		SELECT * FROM studios 
+	</select>
+	
+	<!--保存当前演出厅中座位的状态  -->
+	<insert id="saveSeatStatus" parameterType="map" useGeneratedKeys="true" keyProperty="seat_id">
+		INSERT INTO seats(seat_status,seat_row,seat_col,studio_id) 
+		VALUES(#{seat_status},#{seat_row},#{seat_col},#{studio_id})
+	</insert>
+	
+	<!-- 根据演出厅编号，获取其座位的状态 -->
+	<select id="getSeatStatusByStudioId" parameterType="_integer" resultMap="rm1">
+		SELECT * FROM seats WHERE studio_id = #{studio_id}
+	</select>
+	
+	<!-- 根据座位的编号，获取座位的信息 -->
+	<select id="getSeatBySeatId" parameterType="_integer" resultType="SeatInfo">
+		SELECT * FROM seats WHERE seat_id = #{seat_id}
+	</select>
+	
+	<!-- 若座位状态为1可用，就删除 -->
+	<delete id="deleteSeatBySeatId" parameterType="_integer">
+		DELETE FROM seats WHERE seat_id = #{seat_id}
+	</delete>
+	
+	<!-- 更新座位状态信息 -->
+	<update id="updateSeatBySeatId" parameterType="_integer">
+		update seats set seat_status=#{seat_status,jdbcType=INTEGER},seat_row=#{seat_row,jdbcType=INTEGER},
+							 seat_col=#{seat_col,jdbcType=INTEGER},studio_id=#{studio_id,jdbcType=INTEGER}
+		where seat_id=#{seat_id}
+	</update>
+	
+	<!-- 根据演出厅编号，删除该影厅所对应的全部座位 -->
+	<delete id="deleteSeatByStudioId" parameterType="_integer">
+		DELETE FROM seats WHERE studio_id = #{studio_id}
+	</delete>
+	
+	<!-- 根据演出厅编号，初始化座位表 -->
+	<select id="getInitSeatsByStudioId" parameterType="_integer" resultMap="rm2">
+		SELECT * FROM studios WHERE studio_id = #{studio_id}
+	</select>
+	
+	<!-- 根据座位的行列号，删除该座位 -->
+	<delete id="deleteSeatStatus" parameterType="map">
+		DELETE FROM seats WHERE seat_row = #{seat_row} AND seat_col = #{seat_col}	
+	</delete>
+</mapper>

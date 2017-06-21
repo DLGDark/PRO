@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "
+http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xupt.ttms.dao.ScheduleDao">
+	<!-- 演出厅的结果映射 -->
+	<resultMap type="StudioInfo" id="rm1">
+		<id property="studio_id" column="studio_id"/>
+		<result property="studio_name" column="studio_name"/>
+		<result property="seat_rows" column="seat_rows"/>
+		<result property="seat_cols" column="seat_cols"/>
+		<result property="studio_type" column="studio_type"/>
+		<result property="studio_status" column="studio_status"/>
+		<result property="studio_desc" column="studio_desc"/>
+	</resultMap>
+	
+	<!-- 影片的结果映射 -->
+	<resultMap type="FilmInfo" id="rm2">
+		<id property="film_id" column="film_id"/>
+		<result property="film_name" column="film_name"/>
+		<result property="film_length" column="film_length"/>
+		<result property="film_type" column="film_type"/>
+		<result property="film_stars" column="film_stars"/>
+		<result property="film_desc" column="film_desc"/>
+		<result property="film_price" column="film_price"/>
+		<result property="film_datetime" column="film_datetime"/>
+		<result property="film_area" column="film_area"/>
+		<result property="film_img" column="film_img"/>
+		<result property="film_score" column="film_score"/>
+	</resultMap>
+	
+	<!-- 演出计划的结果映射 -->
+	<resultMap type="ScheduleInfo" id="rm3">
+		<id property="sche_id" column="sche_id"/>
+		<result property="film_begintime" column="film_begintime"/>
+		<result property="film_endtime" column="film_endtime"/>
+		<result property="film_id" column="film_id"/>
+		<result property="studio_id" column="studio_id"/>
+		<result property="film_startdate" column="film_startdate"/>
+	</resultMap>
+	
+	<!-- 演出计划的结果映射 -->
+	<resultMap type="ScheduleInfo" id="rm4">
+		<id property="sche_id" column="sche_id"/>
+		<result property="film_begintime" column="film_begintime"/>
+		<result property="film_endtime" column="film_endtime"/>
+		<result property="film_id" column="film_id"/>
+		<result property="studio_id" column="studio_id"/>
+		<result property="film_startdate" column="film_startdate"/>
+		<!-- (关联查询)关联查询 ScheduleInfo 中的studio 属性，类型为StudioInfo对象 -->
+		<association property="studio" javaType="StudioInfo">
+			<id property="studio_id" column="studio_id"/>
+			<result property="studio_name" column="studio_name"/>
+		</association>	
+		<!-- (关联查询)关联查询 ScheduleInfo 中的 film 属性，类型为FilmInfo对象 -->
+		<association property="film" javaType="FilmInfo">
+			<id property="film_id" column="film_id"/>
+			<result property="film_name" column="film_name"/>
+			<result property="film_length" column="length"/>
+			<result property="film_price" column="film_price"/>
+		</association>
+	</resultMap>
+	
+	<!-- 获取所有的演出厅列表 -->
+	<select id="getAllStudios" resultMap="rm1">
+		SELECT * FROM studios
+	</select>
+	
+	<!-- 获取所有的影片列表 -->
+	<select id="getAllFilms" resultMap="rm2">
+		SELECT * FROM films
+	</select>
+	
+	<!-- 根据影厅的编号，获取电影列表 -->
+	<select id="getFilmsByStudioId" parameterType="_integer" resultMap="rm3">
+		SELECT * FROM schedules WHERE studio_id = #{studio_id}
+	</select>
+	
+	<!-- 添加一条演出计划 -->
+	<insert id="saveFilmPlay" parameterType="ScheduleInfo" useGeneratedKeys="true" keyProperty="sche_id">
+			insert into schedules (film_begintime,film_endtime,film_id,studio_id,film_startdate) 
+			values( #{film_begintime,jdbcType=VARCHAR},
+					#{film_endtime,jdbcType=VARCHAR},
+					#{film_id,jdbcType=INTEGER},
+					#{studio_id,jdbcType=INTEGER},
+					#{film_startdate,jdbcType=VARCHAR}
+			 	 )
+	</insert>
+	
+	<!-- 获取演出计划中所有要放映的电影列表 -->
+	<select id="getAllSchedules" resultMap="rm4">
+		SELECT s.sche_id,
+			   s.film_begintime,
+			   s.film_endtime,
+			   s.film_id,
+			   s.studio_id,
+			   s.film_startdate,
+			   f.film_name,
+			   f.film_length length,
+			   f.film_price,
+			   stu.studio_name 
+		FROM (schedules s left outer join films f on s.film_id = f.film_id)
+		left outer join studios stu on s.studio_id = stu.studio_id
+	</select>
+	
+	<!-- 根据演出计划的编号，获取记录详情 -->
+	<select id="getScheInfoByScheId" parameterType="_integer" resultMap="rm4">
+		SELECT s.sche_id,
+			   s.film_begintime,
+			   s.film_endtime,
+			   s.film_id,
+			   s.studio_id,
+			   s.film_startdate,
+			   f.film_name,
+			   f.film_length,
+			   f.film_price
+		FROM schedules s left outer join films f on s.film_id = f.film_id 
+		WHERE sche_id = #{sche_id}
+	</select>
+	
+	<!-- 根据演出计划的编号，更新一条记录 -->
+	<update id="updateScheInfoByScheId" parameterType="ScheduleInfo">
+		update schedules set film_begintime=#{film_begintime,jdbcType=VARCHAR},
+							 film_endtime=#{film_endtime,jdbcType=VARCHAR},
+							 film_id=#{film_id,jdbcType=INTEGER},
+							 studio_id=#{studio_id,jdbcType=INTEGER},
+							 film_startdate=#{film_startdate,jdbcType=VARCHAR}
+		where sche_id=#{sche_id}
+	</update>
+	
+	<!-- 批量删除演出计划 -->
+	<delete id="batchDeleteSchedules" parameterType="_integer[]">
+		delete from schedules where sche_id in
+		<foreach collection="array" open="(" close=")" separator="," item="sche_id">#{sche_id}</foreach>
+	</delete>
+	
+	<!-- 根据影片编号，获取影片在某演出厅的播放时间 -->
+	<select id="getFilmPlayByFilmId" parameterType="_integer" resultMap="rm4">
+		SELECT s.sche_id,
+			   s.film_begintime,
+			   s.film_endtime,
+			   s.film_id,
+			   s.studio_id,
+			   s.film_startdate,
+			   f.film_name,
+			   f.film_length length,
+			   f.film_price,
+			   stu.studio_name 
+		FROM (schedules s left outer join films f on s.film_id = f.film_id)
+		left outer join studios stu on s.studio_id = stu.studio_id 
+		where s.film_id = #{film_id}
+	</select>
+	
+	<!-- 根据电影编号，获取演出计划对象 -->
+	<select id="getScheInfoByFilmId" parameterType="_int" resultMap="rm4">
+		SELECT * FROM schedules WHERE film_id = #{film_id}
+	</select>
+	
+	<!-- 根据影片编号，删除该影片对应的所有演出计划 -->
+	<delete id="deleteSchedulesByFilmId" parameterType="_int">
+		DELETE FROM schedules WHERE film_id = #{film_id}
+	</delete>
+	
+	<!-- 根据演出厅编号，删除该演出厅对应的所有演出计划 -->
+	<delete id="deleteSchedulesByStudioId" parameterType="_integer">
+		DELETE FROM schedules WHERE studio_id = #{studio_id}
+	</delete>
+	
+	<!-- 根据演出厅编号，获取所有的演出计划列表 -->
+	<select id="getSchedulesByStuId" parameterType="_integer" resultMap="rm4">
+		SELECT s.sche_id,
+			   s.film_begintime,
+			   s.film_endtime,
+			   s.film_id,
+			   s.studio_id,
+			   s.film_startdate,
+			   f.film_name,
+			   f.film_price,
+			   f.film_length length,
+			   stu.studio_name 
+		FROM (schedules s left outer join films f on s.film_id = f.film_id)
+		left outer join studios stu on s.studio_id = stu.studio_id 
+		where s.studio_id = #{studio_id}
+	</select>
+	
+	<!-- 根据演出计划编号，删除一条演出计划 -->
+	<delete id="deleteScheByScheId" parameterType="_integer">
+		DELETE FROM schedules WHERE sche_id = #{sche_id}
+	</delete>
+</mapper>
